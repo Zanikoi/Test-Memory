@@ -26,6 +26,7 @@ const cardsText = [
 
 let fistCard = '';
 let secondCard = '';
+let firstCardTextTurned = false; // Para rastrear se uma carta de texto foi virada
 
 // Função para criar elementos com uma classe
 const createElement = (tag, classname) => {
@@ -38,10 +39,9 @@ const createElement = (tag, classname) => {
 const checkEndGame = () => {
     const disabledCards = document.querySelectorAll('.diseble-card');
     if (disabledCards.length === 18) {
-        // Exibir o alert após um pequeno atraso para que o efeito finalize
         setTimeout(() => {
             alert('Parabéns, você ganhou o jogo!');
-        }, 600); // Ajuste o tempo para coincidir com o tempo de animação da carta
+        }, 600);
     }
 };
 
@@ -56,6 +56,7 @@ const checkCard = () => {
 
         fistCard = '';
         secondCard = '';
+        firstCardTextTurned = false; // Reseta a variável ao desabilitar as cartas
 
         checkEndGame();
     } else {
@@ -65,6 +66,7 @@ const checkCard = () => {
 
             fistCard = '';
             secondCard = '';
+            firstCardTextTurned = false; // Reseta a variável ao não combinar
         }, 500);
     }
 };
@@ -72,15 +74,30 @@ const checkCard = () => {
 // Revela a carta ao clicar
 const revealCard = ({ target }) => {
     if (target.parentNode.className.includes('reveal-card')) {
-        return;
+        return; // Não faz nada se a carta já está virada
     }
+
+    // Verifica se a carta clicada é uma carta de texto
+    const isTextCard = target.parentNode.querySelector('.face.frontText');
+
     if (fistCard === '') {
-        target.parentNode.classList.add('reveal-card');
-        fistCard = target.parentNode;
+        if (isTextCard) {
+            target.parentNode.classList.add('reveal-card');
+            fistCard = target.parentNode;
+            firstCardTextTurned = true; // Marca que uma carta de texto foi virada
+        } else {
+            alert('Você precisa virar uma carta de texto primeiro!');
+            return; // Não faz nada se tentar virar uma carta de tipo
+        }
     } else if (secondCard === '') {
-        target.parentNode.classList.add('reveal-card');
-        secondCard = target.parentNode;
-        checkCard();
+        if (firstCardTextTurned || isTextCard) {
+            target.parentNode.classList.add('reveal-card');
+            secondCard = target.parentNode;
+            checkCard();
+        } else {
+            alert('Você precisa virar uma carta de texto primeiro!');
+            return; // Se a primeira carta não for texto, não faz nada
+        }
     }
 };
 
@@ -129,22 +146,19 @@ const shuffle = (array) => {
 
 // Função para carregar as cartas misturadas no grid
 const loadGame = () => {
-    // Combine os dois arrays de cartas
     const combinedCards = [
         ...cardsType.map((type) => ({ type: 'type', value: type })),
         ...cardsText.map((text) => ({ type: 'text', value: text })),
     ];
 
-    // Embaralhe as cartas
     const shuffledCards = shuffle(combinedCards);
 
-    // Crie as cartas embaralhadas e adicione ao grid
     shuffledCards.forEach((card) => {
         let cardElement;
         if (card.type === 'type') {
-            cardElement = createCardType(card.value); // Cria uma carta de tipo
+            cardElement = createCardType(card.value);
         } else {
-            cardElement = createCardText(card.value); // Cria uma carta de texto
+            cardElement = createCardText(card.value);
         }
         grid.appendChild(cardElement);
     });
