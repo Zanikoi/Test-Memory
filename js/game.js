@@ -24,8 +24,8 @@ const cardsText = [
     'teste_unitário',
 ];
 
-let fistCard='';
-let secondCard='';
+let fistCard = '';
+let secondCard = '';
 
 // Função para criar elementos com uma classe
 const createElement = (tag, classname) => {
@@ -34,23 +34,23 @@ const createElement = (tag, classname) => {
     return element;
 };
 
+// Verifica se todas as cartas foram desabilitadas e exibe o alerta
 const checkEndGame = () => {
-    const disabledCards = document.querySelectorAll('.disable-card');
+    const disabledCards = document.querySelectorAll('.diseble-card');
     if (disabledCards.length === 18) {
-        // Exibir o alert após o efeito do giro
+        // Exibir o alert após um pequeno atraso para que o efeito finalize
         setTimeout(() => {
             alert('Parabéns, você ganhou o jogo!');
-        }, 500); // Ajuste este valor se a animação durar mais
+        }, 600); // Ajuste o tempo para coincidir com o tempo de animação da carta
     }
 };
 
-const checkCard = () =>{
-
+// Verifica se as cartas combinam e desabilita as cartas correspondentes
+const checkCard = () => {
     const fistcharacter = fistCard.getAttribute('data-character');
-
     const secontcharacter = secondCard.getAttribute('data-character');
 
-    if (fistcharacter == secontcharacter ) {
+    if (fistcharacter === secontcharacter) {
         fistCard.firstChild.classList.add('diseble-card');
         secondCard.firstChild.classList.add('diseble-card');
 
@@ -58,34 +58,31 @@ const checkCard = () =>{
         secondCard = '';
 
         checkEndGame();
-        
-    }else{
-        setTimeout(()=>{
-        fistCard.classList.remove('reveal-card');
-        secondCard.classList.remove('reveal-card');
+    } else {
+        setTimeout(() => {
+            fistCard.classList.remove('reveal-card');
+            secondCard.classList.remove('reveal-card');
 
-        fistCard = '';
-        secondCard = '';
+            fistCard = '';
+            secondCard = '';
+        }, 500);
+    }
+};
 
-    },500);}
-
-}
-
-const revealCard =({target})=>{
-    if(target.parentNode.className.includes('reveal-card')){
+// Revela a carta ao clicar
+const revealCard = ({ target }) => {
+    if (target.parentNode.className.includes('reveal-card')) {
         return;
     }
-    if(fistCard == ''){
+    if (fistCard === '') {
         target.parentNode.classList.add('reveal-card');
         fistCard = target.parentNode;
-    }
-    else if(secondCard == ''){
+    } else if (secondCard === '') {
         target.parentNode.classList.add('reveal-card');
         secondCard = target.parentNode;
         checkCard();
     }
-
-}
+};
 
 // Função para criar cartas de texto
 const createCardText = (cardText) => {
@@ -133,8 +130,10 @@ const shuffle = (array) => {
 // Função para carregar as cartas misturadas no grid
 const loadGame = () => {
     // Combine os dois arrays de cartas
-    const combinedCards = [...cardsType.map(type => ({ type: 'type', value: type })), 
-                          ...cardsText.map(text => ({ type: 'text', value: text }))];
+    const combinedCards = [
+        ...cardsType.map((type) => ({ type: 'type', value: type })),
+        ...cardsText.map((text) => ({ type: 'text', value: text })),
+    ];
 
     // Embaralhe as cartas
     const shuffledCards = shuffle(combinedCards);

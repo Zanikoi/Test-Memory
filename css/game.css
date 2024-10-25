@@ -49,7 +49,9 @@ aspect-ratio: 3/5;
 
 }
 .diseble-card{
-    filter: saturate(0);
+    filter: saturate();
     opacity: 0.5;
+    transform: scale(0.7); /* Diminui o tamanho da carta */
+    transition: all 2s ease-in-out;
 }
 
