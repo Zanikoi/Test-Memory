@@ -13,16 +13,19 @@ const cardsType = [
 ];
 
 const cardsText = [
-    'teste_aceitaçãoT',
-    'teste_desempenhoT',
-    'teste_exploraçãoT',
-    'teste_fumaçaT',
-    'teste_integraçãoT',
-    'teste_regressãoT',
-    'teste_sanidadeT',
-    'teste_segurançaT',
-    'teste_unitárioT',
+    'teste_aceitação',
+    'teste_desempenho',
+    'teste_exploração',
+    'teste_fumaça',
+    'teste_integração',
+    'teste_regressão',
+    'teste_sanidade',
+    'teste_segurança',
+    'teste_unitário',
 ];
+
+let fistCard='';
+let secondCard='';
 
 // Função para criar elementos com uma classe
 const createElement = (tag, classname) => {
@@ -31,16 +34,72 @@ const createElement = (tag, classname) => {
     return element;
 };
 
+const checkEndGame = () => {
+    const disabledCards = document.querySelectorAll('.disable-card');
+    if (disabledCards.length === 18) {
+        // Exibir o alert após o efeito do giro
+        setTimeout(() => {
+            alert('Parabéns, você ganhou o jogo!');
+        }, 500); // Ajuste este valor se a animação durar mais
+    }
+};
+
+const checkCard = () =>{
+
+    const fistcharacter = fistCard.getAttribute('data-character');
+
+    const secontcharacter = secondCard.getAttribute('data-character');
+
+    if (fistcharacter == secontcharacter ) {
+        fistCard.firstChild.classList.add('diseble-card');
+        secondCard.firstChild.classList.add('diseble-card');
+
+        fistCard = '';
+        secondCard = '';
+
+        checkEndGame();
+        
+    }else{
+        setTimeout(()=>{
+        fistCard.classList.remove('reveal-card');
+        secondCard.classList.remove('reveal-card');
+
+        fistCard = '';
+        secondCard = '';
+
+    },500);}
+
+}
+
+const revealCard =({target})=>{
+    if(target.parentNode.className.includes('reveal-card')){
+        return;
+    }
+    if(fistCard == ''){
+        target.parentNode.classList.add('reveal-card');
+        fistCard = target.parentNode;
+    }
+    else if(secondCard == ''){
+        target.parentNode.classList.add('reveal-card');
+        secondCard = target.parentNode;
+        checkCard();
+    }
+
+}
+
 // Função para criar cartas de texto
 const createCardText = (cardText) => {
     const card = createElement('div', 'card');
     const frontText = createElement('div', 'face frontText');
     const backText = createElement('div', 'face backText');
 
-    frontText.style.backgroundImage = `url('../images/${cardText}.png')`;
+    frontText.style.backgroundImage = `url('../images/cardsText/${cardText}.png')`;
 
     card.appendChild(frontText);
     card.appendChild(backText);
+
+    card.addEventListener('click', revealCard);
+    card.setAttribute('data-character', cardText);
 
     return card;
 };
@@ -51,10 +110,13 @@ const createCardType = (cardType) => {
     const front = createElement('div', 'face front');
     const back = createElement('div', 'face back');
 
-    front.style.backgroundImage = `url('../images/${cardType}.png')`;
+    front.style.backgroundImage = `url('../images/cardsType/${cardType}.png')`;
 
     card.appendChild(front);
     card.appendChild(back);
+
+    card.addEventListener('click', revealCard);
+    card.setAttribute('data-character', cardType);
 
     return card;
 };
