@@ -1,4 +1,6 @@
 const grid = document.querySelector('.grid');
+const spanPlayer = document.querySelector('.player');
+const time = document.querySelector('.time')
 
 const cardsType = [
     'teste_aceitação',
@@ -40,7 +42,8 @@ const checkEndGame = () => {
     const disabledCards = document.querySelectorAll('.diseble-card');
     if (disabledCards.length === 18) {
         setTimeout(() => {
-            alert('Parabéns, você ganhou o jogo!');
+            alert(`Parabéns, ${spanPlayer.innerHTML} você ganhou o jogo!, seu tempo foi ${time.innerHTML} segundos`);
+            clearInterval(this.loop);
         }, 600);
     }
 };
@@ -164,5 +167,18 @@ const loadGame = () => {
     });
 };
 
-// Chama a função para carregar o jogo com as cartas misturadas e embaralhadas
-loadGame();
+const startTime = () => {
+
+    this.loop = setInterval(()=>{
+        const correntTime = +time.innerHTML;
+        time.innerHTML = correntTime + 1;
+    }, 1000);
+}
+
+window.onload = () =>{
+    spanPlayer.innerHTML = localStorage.getItem('player');
+startTime();
+loadGame(); 
+}
+
+

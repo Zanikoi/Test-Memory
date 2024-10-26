@@ -47,8 +47,18 @@ justify-content: center;
     cursor: auto;
 }
 .login_form{
-    background-image: url("/images/game\ start.jpg");
+    background-image: url("/images/gamestart1.png");
     background-size: 100% 100%;
     background-repeat: no-repeat;
     
 }
+.h1{
+    padding-bottom: 40px;
+    font-size: 60px;
+    color: white;
+}
+@media screen and (max-width: 1020px) {
+    .h1{
+        font-size: 32px;
+    }
+  }
